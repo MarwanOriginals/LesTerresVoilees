@@ -1,8 +1,8 @@
-#ifdef __linux__
+#ifdef __linux__ // Linux
 #include <SDL2/SDL.h> //  SDL library
 #endif
 
-#ifdef _WIN32 || _WIN64
+#ifdef _WIN32 || _WIN64 // Windows
 #include "SDL.h" //  SDL library
 #endif
 
