@@ -1,4 +1,4 @@
-5#ifdef __linux__ // Linux
+#ifdef __linux__ // Linux
 #include <SDL2/SDL.h> //  SDL library
 #endif
 
@@ -49,7 +49,7 @@ int main(int argc, char* args[])
             SDL_UpdateWindowSurface(window);
 
             //Wait two seconds
-            SDL_Delay(5000);
+            SDL_Delay(4000);
         }
     }
 
