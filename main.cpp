@@ -3,7 +3,7 @@
 #endif
 
 #ifdef _WIN32 || _WIN64
-#include "SDL/SDL.h" //  SDL library
+#include "SDL.h" //  SDL library
 #endif
 
 #include <iostream>   //  Standard IO librar
