@@ -1,5 +1,5 @@
 #include <SDL2/SDL.h> //  SDL library
-#include <iostream>   //  Standard IO librar
+#include <iostream>   //  Standard IO library
 
 const int SCREEN_WIDTH = 1024;
 const int SCREEN_HEIGHT = 768;
