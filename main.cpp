@@ -31,7 +31,7 @@ int main(int argc, char* args[])
     {
         //  Create window
 
-        window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+        window = SDL_CreateWindow("Les Terres Voilées", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 
         if(window == nullptr)
         {
@@ -48,8 +48,8 @@ int main(int argc, char* args[])
             //  Updating surface
             SDL_UpdateWindowSurface(window);
 
-            //Wait two seconds
-            SDL_Delay(4000);
+            //Wait five seconds
+            SDL_Delay(5000);
         }
     }
 
