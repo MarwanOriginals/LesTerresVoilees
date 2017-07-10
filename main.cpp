@@ -1,5 +1,12 @@
+#ifdef __linux__
 #include <SDL2/SDL.h> //  SDL library
-#include <iostream>   //  Standard IO library
+#endif
+
+#ifdef _WIN32 || _WIN64
+#include "SDL.h" //  SDL library
+#endif
+
+#include <iostream>   //  Standard IO librar
 
 const int SCREEN_WIDTH = 1024;
 const int SCREEN_HEIGHT = 768;
