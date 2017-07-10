@@ -1,9 +1,16 @@
-#include <iostream> //test
+#include <iostream>
+#include "SDL.h"
+#undef main
+
 
 using std::cout;
 using std::endl;
 
 int main(void)
 {
-    cout << "I test something" << endl;
+	if (SDL_Init(SDL_INIT_EVERYTHING) == 0)
+		cout << "I test something" << endl;
+
+	getchar();
+	return 0;
 }
