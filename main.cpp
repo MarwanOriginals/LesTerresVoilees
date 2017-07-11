@@ -1,10 +1,11 @@
 #ifdef __linux__ // Linux
 #include <SDL2/SDL.h> //  SDL library
+// à completer avec la SDL image
 #endif
 
 #ifdef _WIN32 || _WIN64 // Windows
 #include "SDL.h" //  SDL library
-#include "SDL_image.h"
+#include "SDL_image.h" // SDL Image
 #endif
 
 #include <iostream>   //  Standard IO librar
@@ -23,7 +24,7 @@ int main(int argc, char* args[])
     //  The SDL_Surface object is the "blackboard" of our window
     SDL_Surface* screen_surface = nullptr;
 
-	// Initialisation de l'image
+	// Initialisation des images
 	SDL_Surface *firstImage = nullptr, *sprite = nullptr;
 
 	// Initialisation de la position de l'image
@@ -61,25 +62,28 @@ int main(int argc, char* args[])
 			// Chargement de l'image bitmap
 			firstImage = SDL_LoadBMP("firstImage.bmp");
 
-			// Chargement image png
-			sprite = IMG_Load("sprite.png");
-
-			
 			// Si l'image a une erreur
 			if (firstImage == NULL)
 			{
 				cout << "Error Image SDL" << SDL_GetError() << endl;
 			}
 
-			
+			// Chargement image png
+			sprite = IMG_Load("sprite.png");
+
+			// Si l'image a une erreur
+			if (sprite == NULL)
+			{
+				cout << "Error Image SDL" << SDL_GetError() << endl;
+			}
+
 
 			// Position x et y des images
 			positionFirstImage.x = SCREEN_WIDTH / 4;
 			positionFirstImage.y = SCREEN_HEIGHT / 4;
 
 			// Blitage de la surface
-			//SDL_BlitSurface(firstImage, NULL, screen_surface, &positionFirstImage);
-
+			SDL_BlitSurface(firstImage, NULL, screen_surface, &positionFirstImage);
 			SDL_BlitSurface(sprite, NULL, screen_surface, NULL);
 
 			//  Updating surface
@@ -93,6 +97,7 @@ int main(int argc, char* args[])
 
 	// Destroy Image
 	SDL_FreeSurface(firstImage);
+	SDL_FreeSurface(sprite);
 
     //  Destroy window
     SDL_DestroyWindow(window);
