@@ -4,6 +4,7 @@
 
 #ifdef _WIN32 || _WIN64 // Windows
 #include "SDL.h" //  SDL library
+#include "SDL_image.h"
 #endif
 
 #include <iostream>   //  Standard IO librar
@@ -23,7 +24,7 @@ int main(int argc, char* args[])
     SDL_Surface* screen_surface = nullptr;
 
 	// Initialisation de l'image
-	SDL_Surface *firstImage = nullptr;
+	SDL_Surface *firstImage = nullptr, *sprite = nullptr;
 
 	// Initialisation de la position de l'image
 	SDL_Rect positionFirstImage;
@@ -57,8 +58,12 @@ int main(int argc, char* args[])
 
         }
 
-			// Chargement de l'image
+			// Chargement de l'image bitmap
 			firstImage = SDL_LoadBMP("firstImage.bmp");
+
+			// Chargement image png
+			sprite = IMG_Load("sprite.png");
+
 			
 			// Si l'image a une erreur
 			if (firstImage == NULL)
@@ -66,12 +71,16 @@ int main(int argc, char* args[])
 				cout << "Error Image SDL" << SDL_GetError() << endl;
 			}
 
+			
+
 			// Position x et y des images
 			positionFirstImage.x = SCREEN_WIDTH / 4;
 			positionFirstImage.y = SCREEN_HEIGHT / 4;
 
 			// Blitage de la surface
-			SDL_BlitSurface(firstImage, NULL, screen_surface, &positionFirstImage);
+			//SDL_BlitSurface(firstImage, NULL, screen_surface, &positionFirstImage);
+
+			SDL_BlitSurface(sprite, NULL, screen_surface, NULL);
 
 			//  Updating surface
 			SDL_UpdateWindowSurface(window);
