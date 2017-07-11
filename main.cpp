@@ -22,6 +22,12 @@ int main(int argc, char* args[])
     //  The SDL_Surface object is the "blackboard" of our window
     SDL_Surface* screen_surface = nullptr;
 
+	// Initialisation de l'image
+	SDL_Surface *firstImage = nullptr;
+
+	// Initialisation de la position de l'image
+	SDL_Rect positionFirstImage;
+
     //  Initialisation
     if(SDL_Init(SDL_INIT_VIDEO) < 0)
     {
@@ -48,10 +54,36 @@ int main(int argc, char* args[])
             //  Updating surface
             SDL_UpdateWindowSurface(window);
 
-            //Wait five seconds
-            SDL_Delay(5000);
+
         }
+
+			// Chargement de l'image
+			firstImage = SDL_LoadBMP("c:\\Users\\marwan\\Documents\\Visual Studio 2017\\Projects\\GitHub Marwan\\firstImage.bmp");
+			
+			// Si l'image a une erreur
+			if (firstImage == NULL)
+			{
+				cout << "Error Image SDL" << SDL_GetError() << endl;
+			}
+
+			// position x et y des images
+			positionFirstImage.x = SCREEN_WIDTH / 4;
+			positionFirstImage.y = SCREEN_HEIGHT / 4;
+
+			// Blitage de la surface
+			SDL_BlitSurface(firstImage, NULL, screen_surface, &positionFirstImage);
+
+			//  Updating surface
+			SDL_UpdateWindowSurface(window);
+
+            // Wait five seconds
+            SDL_Delay(5000);
+
+
     }
+
+	// Destroy Image
+	SDL_FreeSurface(firstImage);
 
     //  Destroy window
     SDL_DestroyWindow(window);
