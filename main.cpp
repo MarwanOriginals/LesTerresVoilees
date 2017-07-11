@@ -58,7 +58,7 @@ int main(int argc, char* args[])
         }
 
 			// Chargement de l'image
-			firstImage = SDL_LoadBMP("c:\\Users\\marwan\\Documents\\Visual Studio 2017\\Projects\\GitHub Marwan\\firstImage.bmp");
+			firstImage = SDL_LoadBMP("firstImage.bmp");
 			
 			// Si l'image a une erreur
 			if (firstImage == NULL)
@@ -66,7 +66,7 @@ int main(int argc, char* args[])
 				cout << "Error Image SDL" << SDL_GetError() << endl;
 			}
 
-			// position x et y des images
+			// Position x et y des images
 			positionFirstImage.x = SCREEN_WIDTH / 4;
 			positionFirstImage.y = SCREEN_HEIGHT / 4;
 
