@@ -1,5 +1,14 @@
-#include <iostream>
+#ifdef __linux__ // Linux
+#include <SDL2/SDL.h> //  SDL library
 #include <SDL2/SDL_image.h>
+#include <iostream>
+#endif
+
+#ifdef _WIN32 || _WIN64 // Windows
+#include "SDL.h" //  SDL library
+#include "SDL_image.h" // SDL Image
+#include <iostream>
+#endif
 
 #include "Texture.hpp"
 

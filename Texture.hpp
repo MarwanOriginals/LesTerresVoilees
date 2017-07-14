@@ -1,9 +1,17 @@
 #ifndef TEXTURE_HPP
 #define TEXTURE_HPP
 
-#include <SDL2/SDL.h>
+#ifdef __linux__ // Linux
+#include <SDL2/SDL.h> //  SDL library
+#include <SDL2/SDL_image.h>
 #include <iostream>
-#include <map>
+#endif
+
+#ifdef _WIN32 || _WIN64 // Windows
+#include "SDL.h" //  SDL library
+#include "SDL_image.h" // SDL Image
+#include <iostream>
+#endif
 
 class Texture
 {
