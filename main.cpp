@@ -71,7 +71,7 @@ int main(int argc, char* args[])
         }
         else
         {
-            //  Get window surfacef
+            //  Get window surface
             screen_surface = SDL_GetWindowSurface(window);
 
             //  Fill the sufrace white
@@ -160,11 +160,6 @@ int main(int argc, char* args[])
 				case SDLK_RIGHT:
 					sprite = touchePresse[DROITE];
 					positionSprite.x+=10;
-					break;
-
-				case SDLK_r:
-					positionSprite.x = 0;
-					positionSprite.y = 0;
 					break;
 
 				default:
