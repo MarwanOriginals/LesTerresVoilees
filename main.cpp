@@ -126,7 +126,7 @@ int main(int argc, char* args[])
 	touchePresse[HAUT] = chargementSurface("sprite.png");
 	touchePresse[BAS] = chargementSurface("sprite.png");
 	touchePresse[GAUCHE] = chargementSurface("sprite.png");
-	touchePresse[DROITE] = chargementSurface("sprite.png");
+	touchePresse[DROITE] = chargementSurface("spriteGR.png");
 
 
 	while (boucle)
@@ -143,12 +143,10 @@ int main(int argc, char* args[])
 				switch (e.key.keysym.sym)
 				{
 				case SDLK_UP:
-					sprite = touchePresse[HAUT];
 					positionSprite.y-=10;
 					break;
 
 				case SDLK_DOWN:
-					sprite = touchePresse[BAS];
 					positionSprite.y+=10;
 					break;
 
