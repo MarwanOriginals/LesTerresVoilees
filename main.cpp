@@ -1,6 +1,6 @@
 #ifdef __linux__ // Linux
 #include <SDL2/SDL.h> //  SDL library
-// à completer avec la SDL image
+#include <SDL2/SDL_image.h>
 #endif
 
 #ifdef _WIN32 || _WIN64 // Windows
