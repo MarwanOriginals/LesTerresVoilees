@@ -11,9 +11,10 @@
 #endif
 
 #include <iostream>   //  Standard IO librar
+#include "Texture.hpp" // Implantation texture
 
-const int SCREEN_WIDTH = 1024;
-const int SCREEN_HEIGHT = 768;
+const int SCREEN_WIDTH = 1280;
+const int SCREEN_HEIGHT = 720;
 
 using std::cout;
 using std::endl;
@@ -56,6 +57,9 @@ int main(int argc, char* args[])
 	// Initialisation d'un évenement "e" 
 	SDL_Event e;
 
+	// Creation texture test
+	Texture test;
+
     //  Initialisation
     if(SDL_Init(SDL_INIT_VIDEO) < 0)
     {
@@ -64,13 +68,13 @@ int main(int argc, char* args[])
     else
     {
         //  Create window
-
         window = SDL_CreateWindow("Les Terres Voilées", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
 
         if(window == nullptr)
         {
             cout << "Error on creating window, SDL Error : " << SDL_GetError() << endl;
         }
+
         else
         {
             //  Get window surface
@@ -82,11 +86,10 @@ int main(int argc, char* args[])
             //  Updating surface
             SDL_UpdateWindowSurface(window);
 
-
         }
 
 			// Chargement de l'image bitmap
-			firstImage = SDL_LoadBMP("firstImage.bmp");
+			firstImage = IMG_Load("background.png");
 
 			// Si l'image a une erreur
 			if (firstImage == NULL)
@@ -106,10 +109,9 @@ int main(int argc, char* args[])
 				cout << "Error Image SDL" << SDL_GetError() << endl;
 			}
 
-
 			// Position x et y des images
-			positionFirstImage.x = SCREEN_WIDTH / 4;
-			positionFirstImage.y = SCREEN_HEIGHT / 4;
+			positionFirstImage.x = 0;
+			positionFirstImage.y = 0;
 			
 			positionSprite.x = 0;
 			positionSprite.y = 0;
@@ -163,7 +165,6 @@ int main(int argc, char* args[])
 					break;
 
 				default:
-					sprite = touchePresse[DEFAULT];
 					break;
 				}
 			}
