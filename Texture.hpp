@@ -20,8 +20,14 @@ public:
 
     void draw(int x, int y, int width, int height, SDL_Renderer* pRenderer, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
+	void update(SDL_Renderer* pRenderer);
+
+	SDL_Texture* m_texture;
+	SDL_Rect a;
+	SDL_Rect b;
+
 private:
-    SDL_Texture* m_texture;
+    
 };
 
 #endif

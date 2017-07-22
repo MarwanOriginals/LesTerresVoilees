@@ -19,15 +19,12 @@ const int SCREEN_HEIGHT = 720;
 using std::cout;
 using std::endl;
 
-// En attendant la classe texture
-SDL_Surface* chargementSurface(std:: string chemin)
-{
-	SDL_Surface* surface = IMG_Load(chemin.c_str());
-	return surface;
-}
 
 int main(int argc, char* args[])
 {
+
+	
+
 	// Enumération des touches [ DEFAULT = 0, HAUT = 1 ... TOTAL = 5]
 	enum Touche
 	{
@@ -45,12 +42,6 @@ int main(int argc, char* args[])
     //  The SDL_Surface object is the "blackboard" of our window
     SDL_Surface* screen_surface = nullptr;
 
-	// Initialisation des images
-	SDL_Surface *firstImage = nullptr, *sprite = nullptr, *touchePresse[TOTAL];
-
-	// Initialisation de la position de l'image
-	SDL_Rect positionFirstImage,positionSprite;
-
 	// Boucle qui tourne pour chaque event
 	bool boucle = true;
 
@@ -59,6 +50,9 @@ int main(int argc, char* args[])
 
 	// Creation texture test
 	Texture test;
+
+	// Renderer
+	SDL_Renderer* renderer;
 
     //  Initialisation
     if(SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -85,53 +79,18 @@ int main(int argc, char* args[])
 
             //  Updating surface
             SDL_UpdateWindowSurface(window);
-
-        }
-
-			// Chargement de l'image bitmap
-			firstImage = IMG_Load("background.png");
-
-			// Si l'image a une erreur
-			if (firstImage == NULL)
-			{
-				cout << "Error Image SDL" << SDL_GetError() << endl;
-			}
-
-			// Chargement image png
-			sprite = IMG_Load("sprite.png");
-
-			// Optimisation de l'image (à voir pour les grosses images)
-			sprite = SDL_ConvertSurfaceFormat(sprite, SDL_PIXELFORMAT_RGBA8888,0);
-
-			// Si l'image a une erreur
-			if (sprite == NULL)
-			{
-				cout << "Error Image SDL" << SDL_GetError() << endl;
-			}
-
-			// Position x et y des images
-			positionFirstImage.x = 0;
-			positionFirstImage.y = 0;
+        }			
 			
-			positionSprite.x = 0;
-			positionSprite.y = 0;
-
-			// Blitage de la surface
-			SDL_BlitSurface(firstImage, NULL, screen_surface, &positionFirstImage);
-			SDL_BlitSurface(sprite, NULL, screen_surface, &positionSprite);
-
-			//  Updating surface
-			SDL_UpdateWindowSurface(window);
-
     }
 
-	// Chargement des textures de déplacement
-	touchePresse[DEFAULT] = chargementSurface("sprite.png");
-	touchePresse[HAUT] = chargementSurface("sprite.png");
-	touchePresse[BAS] = chargementSurface("sprite.png");
-	touchePresse[GAUCHE] = chargementSurface("sprite.png");
-	touchePresse[DROITE] = chargementSurface("spriteGR.png");
+	// Initialisation du renderer
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	SDL_SetRenderDrawColor(renderer, 100, 90, 200, 100);
 
+	test.load("sprite.png", renderer);
+	test.draw(200, 200, 133, 196, renderer);
+
+	
 
 	while (boucle)
 	{
@@ -147,21 +106,23 @@ int main(int argc, char* args[])
 				switch (e.key.keysym.sym)
 				{
 				case SDLK_UP:
-					positionSprite.y-=10;
+					test.b.y -= 10;
 					break;
 
 				case SDLK_DOWN:
-					positionSprite.y+=10;
+					test.b.y += 10;
 					break;
 
 				case SDLK_LEFT:
-					sprite = touchePresse[GAUCHE];
-					positionSprite.x-=10;
+					SDL_DestroyTexture(test.m_texture);
+					test.load("sprite.png", renderer);
+					test.b.x -= 10;
 					break;
 
 				case SDLK_RIGHT:
-					sprite = touchePresse[DROITE];
-					positionSprite.x+=10;
+					SDL_DestroyTexture(test.m_texture);
+					test.load("spriteGR.png", renderer);
+					test.b.x += 10;
 					break;
 
 				default:
@@ -169,22 +130,13 @@ int main(int argc, char* args[])
 				}
 			}
 		}
-
-		//  Fill the sufrace white
-		SDL_FillRect(screen_surface, nullptr, SDL_MapRGB(screen_surface->format, 0xFF, 0xFF, 0xFF));
-
-		// Blitage de la surface
-		SDL_BlitSurface(firstImage, NULL, screen_surface, &positionFirstImage);
-		SDL_BlitSurface(sprite, NULL, screen_surface, &positionSprite);
-
-		//  Updating surface
-		SDL_UpdateWindowSurface(window);
+		
+		test.update(renderer);
 
 	}
 
-	// Destroy Image
-	SDL_FreeSurface(firstImage);
-	SDL_FreeSurface(sprite);
+	//  Updating surface
+	SDL_UpdateWindowSurface(window);
 
     //  Destroy window
     SDL_DestroyWindow(window);

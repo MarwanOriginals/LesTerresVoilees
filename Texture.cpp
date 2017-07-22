@@ -14,17 +14,22 @@
 
 bool Texture::load(std::string fileName, SDL_Renderer* pRenderer)
 {
+	// Opening a image file
     SDL_Surface* pTempSurface = IMG_Load(fileName.c_str());
 
+	// If there is an error
     if(pTempSurface == 0)
     {
         return false;
     }
 
+	// Create a texture
     SDL_Texture* pTexture = SDL_CreateTextureFromSurface(pRenderer, pTempSurface);
 
+	// Destroy surface
     SDL_FreeSurface(pTempSurface);
 
+	// When the texture created was loaded sucessfully
     if(pTexture != nullptr)
     {
         m_texture = pTexture;
@@ -36,17 +41,32 @@ bool Texture::load(std::string fileName, SDL_Renderer* pRenderer)
 
 void Texture::draw(int x, int y, int width, int height, SDL_Renderer* pRenderer, SDL_RendererFlip flip)
 {
-    SDL_Rect srcRect;
-    SDL_Rect destRect;
+	SDL_RenderClear(pRenderer);
 
-    srcRect.x = 0;
-    srcRect.y = 0;
+    a.x = 0;
+    a.y = 0;
 
-    srcRect.w = destRect.w = width;
-    srcRect.h = destRect.h = height;
+    a.w = b.w = width;
+    a.h = b.h = height;
 
-    destRect.x = x;
-    destRect.y = y;
-    
-    SDL_RenderCopyEx(pRenderer, m_texture, &srcRect, &destRect, 0, 0, flip);
+    b.x = x;
+    b.y = y;
+
+	//Render texture to screen
+	SDL_RenderCopy(pRenderer, m_texture, &a, &b);
+
+	//Update screen
+	SDL_RenderPresent(pRenderer);
+}
+
+void Texture::update(SDL_Renderer* pRenderer)
+{
+	SDL_RenderClear(pRenderer);
+
+	//Render texture to screen
+	SDL_RenderCopy(pRenderer, m_texture, &a, &b);
+
+	//Update screen
+	SDL_RenderPresent(pRenderer);
+
 }
