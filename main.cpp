@@ -12,6 +12,7 @@
 
 #include <iostream>   //  Standard IO librar
 #include "Texture.hpp" // Implantation texture
+#include "Collision.hpp"
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
@@ -49,10 +50,14 @@ int main(int argc, char* args[])
 	SDL_Event e;
 
 	// Creation texture test
-	Texture test;
+	Texture test, background;
 
 	// Renderer
 	SDL_Renderer* renderer;
+
+	// Collision
+	Collision joueur, rectangle;
+
 
     //  Initialisation
     if(SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -88,9 +93,22 @@ int main(int argc, char* args[])
 	SDL_SetRenderDrawColor(renderer, 100, 90, 200, 100);
 
 	test.load("sprite.png", renderer);
+	background.load("background.png", renderer);
+
+	background.draw(0, 0, 1280, 720, renderer);
 	test.draw(200, 200, 133, 196, renderer);
 
-	
+	// Initialisation collision
+	SDL_Rect mur;
+
+	mur.x = 900;
+	mur.y = 250;
+	mur.h = 300;
+	mur.w = 300;
+
+	joueur.collisionInit(&test.b);
+	rectangle.collisionInit(&mur);
+
 
 	while (boucle)
 	{
@@ -100,39 +118,52 @@ int main(int argc, char* args[])
 			{
 				boucle = false;
 			}
-
-			if (e.type == SDL_KEYDOWN)
-			{
-				switch (e.key.keysym.sym)
-				{
-				case SDLK_UP:
-					test.b.y -= 10;
-					break;
-
-				case SDLK_DOWN:
-					test.b.y += 10;
-					break;
-
-				case SDLK_LEFT:
-					SDL_DestroyTexture(test.m_texture);
-					test.load("sprite.png", renderer);
-					test.b.x -= 10;
-					break;
-
-				case SDLK_RIGHT:
-					SDL_DestroyTexture(test.m_texture);
-					test.load("spriteGR.png", renderer);
-					test.b.x += 10;
-					break;
-
-				default:
-					break;
-				}
-			}
 		}
-		
-		test.update(renderer);
 
+		const Uint8* key = SDL_GetKeyboardState(NULL);
+
+		if (key[SDL_SCANCODE_RIGHT])
+		{
+			SDL_DestroyTexture(test.m_texture);
+			test.load("spriteGR.png", renderer);
+			test.b.x += 7;
+
+			if (joueur.collisionTest(rectangle))
+				test.b.x -= 7;
+		}
+
+		if (key[SDL_SCANCODE_LEFT])
+		{
+			SDL_DestroyTexture(test.m_texture);
+			test.load("sprite.png", renderer);
+			test.b.x -= 7;
+
+			if (joueur.collisionTest(rectangle))
+				test.b.x += 7;
+		}
+
+		if (key[SDL_SCANCODE_DOWN])
+		{
+			test.b.y += 7;
+
+			if (joueur.collisionTest(rectangle))
+				test.b.y -= 7;
+		}
+		if (key[SDL_SCANCODE_UP])
+		{
+			test.b.y -= 7;
+
+			if (joueur.collisionTest(rectangle))
+				test.b.y += 7;
+		}
+
+		background.update(renderer);
+		SDL_RenderFillRect(renderer, &test.b);
+		test.update(renderer);
+		SDL_RenderFillRect(renderer, &mur);
+
+		//Update screen
+		SDL_RenderPresent(renderer);
 	}
 
 	//  Updating surface

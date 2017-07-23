@@ -14,6 +14,7 @@
 
 bool Texture::load(std::string fileName, SDL_Renderer* pRenderer)
 {
+		
 	// Opening a image file
     SDL_Surface* pTempSurface = IMG_Load(fileName.c_str());
 
@@ -61,12 +62,8 @@ void Texture::draw(int x, int y, int width, int height, SDL_Renderer* pRenderer,
 
 void Texture::update(SDL_Renderer* pRenderer)
 {
-	SDL_RenderClear(pRenderer);
 
 	//Render texture to screen
 	SDL_RenderCopy(pRenderer, m_texture, &a, &b);
-
-	//Update screen
-	SDL_RenderPresent(pRenderer);
 
 }
