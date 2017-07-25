@@ -40,7 +40,7 @@ bool Texture::load(std::string fileName, SDL_Renderer* pRenderer)
     return false;
 }
 
-void Texture::draw(int x, int y, int width, int height, SDL_Renderer* pRenderer, SDL_RendererFlip flip)
+void Texture::draw(int x, int y, int width, int height, SDL_Renderer* pRenderer)
 {
 	SDL_RenderClear(pRenderer);
 
@@ -52,6 +52,26 @@ void Texture::draw(int x, int y, int width, int height, SDL_Renderer* pRenderer,
 
     b.x = x;
     b.y = y;
+
+	//Render texture to screen
+	SDL_RenderCopy(pRenderer, m_texture, &a, &b);
+
+	//Update screen
+	SDL_RenderPresent(pRenderer);
+}
+
+void Texture::draw(int posX, int posY, int x, int y, int width, int height, SDL_Renderer* pRenderer)
+{
+	SDL_RenderClear(pRenderer);
+
+	a.x = posX;
+	a.y = posY;
+
+	a.w = b.w = width;
+	a.h = b.h = height;
+
+	b.x = x;
+	b.y = y;
 
 	//Render texture to screen
 	SDL_RenderCopy(pRenderer, m_texture, &a, &b);

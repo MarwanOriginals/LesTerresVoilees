@@ -50,17 +50,27 @@ int main(int argc, char* args[])
 	SDL_Event e;
 
 	// Creation texture test
-	Texture test, background;
+	Texture background, mage;
 
 	// Renderer
 	SDL_Renderer* renderer;
 
 	// Collision
-	Collision joueur, rectangle;
+	Collision joueur, limitCollision[4];
+
+	// Rect
+	SDL_Rect limit[4];
+
+	// Test annimation sprite 
+	int maxFrame = 9;
+	int currentFrame = 0;
+	const int delayMax = 1;
+	int delay = 0;
+	bool isWalk = 0;
 
 
     //  Initialisation
-    if(SDL_Init(SDL_INIT_VIDEO) < 0)
+    if(SDL_INIT_EVERYTHING < 0)
     {
         cout << "Error when initializing SDL, SDL Error : " << SDL_GetError() << endl;
     }
@@ -92,22 +102,43 @@ int main(int argc, char* args[])
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	SDL_SetRenderDrawColor(renderer, 100, 90, 200, 100);
 
-	test.load("sprite.png", renderer);
 	background.load("background.png", renderer);
-
 	background.draw(0, 0, 1280, 720, renderer);
-	test.draw(200, 200, 133, 196, renderer);
 
-	// Initialisation collision
-	SDL_Rect mur;
+	mage.load("mageWalk.png", renderer);
+	mage.draw(0, 128, 350, 500, 63, 63, renderer);
+	joueur.collisionInit(&mage.b);
 
-	mur.x = 900;
-	mur.y = 250;
-	mur.h = 300;
-	mur.w = 300;
+	// Init des limites
+	// Gauche
+	limit[0].x = 0 - 1;
+	limit[0].y = 0 - 1;
+	limit[0].h = SCREEN_HEIGHT - 1;
+	limit[0].w = 0;
+	limitCollision[0].collisionInit(&limit[0]);
 
-	joueur.collisionInit(&test.b);
-	rectangle.collisionInit(&mur);
+	// Haut
+	limit[1].x = 0 - 5;
+	limit[1].y = 0 - 5;
+	limit[1].h = 0;
+	limit[1].w = SCREEN_WIDTH - 5;
+	limitCollision[1].collisionInit(&limit[1]);
+
+	// Droite
+	limit[2].x = SCREEN_WIDTH + 2;
+	limit[2].y = 0 + 2;
+	limit[2].h = SCREEN_HEIGHT + 2;
+	limit[2].w = 0;
+	limitCollision[2].collisionInit(&limit[2]);
+
+	// Bas
+	limit[3].x = 0 + 5;
+	limit[3].y = SCREEN_HEIGHT + 5;
+	limit[3].h = 0;
+	limit[3].w = SCREEN_WIDTH + 5;
+	limitCollision[3].collisionInit(&limit[3]);
+
+
 
 
 	while (boucle)
@@ -124,43 +155,90 @@ int main(int argc, char* args[])
 
 		if (key[SDL_SCANCODE_RIGHT])
 		{
-			SDL_DestroyTexture(test.m_texture);
-			test.load("spriteGR.png", renderer);
-			test.b.x += 7;
+			isWalk = 1;
+			mage.a.y = 64*3;
+			mage.b.x += 7;
 
-			if (joueur.collisionTest(rectangle))
-				test.b.x -= 7;
+			for (int i = 0; i < 4; i++)
+			{
+				if (joueur.collisionTest(limitCollision[i]))
+				{
+					mage.b.x -= 7;
+					isWalk = 0;
+				}
+			}
 		}
 
 		if (key[SDL_SCANCODE_LEFT])
 		{
-			SDL_DestroyTexture(test.m_texture);
-			test.load("sprite.png", renderer);
-			test.b.x -= 7;
+			isWalk = 1;
+			mage.a.y = 64;
+			mage.b.x -= 7;
 
-			if (joueur.collisionTest(rectangle))
-				test.b.x += 7;
+			for (int i = 0; i < 4; i++)
+			{
+				if (joueur.collisionTest(limitCollision[i]))
+				{
+					mage.b.x += 7;
+					isWalk = 0;
+				}
+			}
 		}
 
 		if (key[SDL_SCANCODE_DOWN])
 		{
-			test.b.y += 7;
+			isWalk = 1;
+			mage.a.y = 64 * 2;
+			mage.b.y += 7;
 
-			if (joueur.collisionTest(rectangle))
-				test.b.y -= 7;
+			for (int i = 0; i < 4; i++)
+			{
+				if (joueur.collisionTest(limitCollision[i]))
+				{
+					mage.b.y -= 7;
+					isWalk = 0;
+				}
+			}
 		}
 		if (key[SDL_SCANCODE_UP])
 		{
-			test.b.y -= 7;
+			isWalk = 1;
+			mage.a.y = 0;
+			mage.b.y -= 7;
 
-			if (joueur.collisionTest(rectangle))
-				test.b.y += 7;
+			for (int i = 0; i < 4; i++)
+			{
+				if (joueur.collisionTest(limitCollision[i]))
+				{
+					mage.b.y += 7;
+					isWalk = 0;
+				}
+			}
 		}
 
 		background.update(renderer);
-		SDL_RenderFillRect(renderer, &test.b);
-		test.update(renderer);
-		SDL_RenderFillRect(renderer, &mur);
+
+		// Animation du personnage
+		if (isWalk && !(key[SDL_SCANCODE_LEFT] && key[SDL_SCANCODE_RIGHT]) && !(key[SDL_SCANCODE_DOWN] && key[SDL_SCANCODE_UP]))
+		{
+			if (delay == delayMax)
+			{
+				currentFrame++;
+				if (currentFrame == maxFrame)
+				{
+					currentFrame = 0;
+				}
+				mage.a.x = currentFrame * 64;
+				delay = 0;
+			}
+			else
+				delay++;
+		}
+		else
+			mage.a.x = 0;
+
+		mage.update(renderer);
+		isWalk = 0;
 
 		//Update screen
 		SDL_RenderPresent(renderer);

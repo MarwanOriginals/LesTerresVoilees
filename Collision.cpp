@@ -12,12 +12,13 @@
 
 #include "Collision.hpp"
 
+// Initialise la hitbox
 void Collision::collisionInit(SDL_Rect* rectBox)
 {
 	a = rectBox;
 }
 
-
+// Test si il y a une collision entre 2 objets
 bool Collision::collisionTest(Collision rectCollider)
 {
 	SDL_Rect* b = rectCollider.a;
