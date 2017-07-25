@@ -68,38 +68,45 @@ int main(int argc, char* args[])
 	int delay = 0;
 	bool isWalk = 0;
 
+	// Init Everything
+	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+	{
+		cout << "Error when initializing SDL, SDL Error : " << SDL_GetError() << endl;
+	}
+	else
+	{
+		//  Create window
+		window = SDL_CreateWindow("Les Terres Voilées", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 
-    //  Initialisation
-    if(SDL_INIT_EVERYTHING < 0)
-    {
-        cout << "Error when initializing SDL, SDL Error : " << SDL_GetError() << endl;
-    }
-    else
-    {
-        //  Create window
-        window = SDL_CreateWindow("Les Terres Voilées", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+		if (window == nullptr)
+		{
+			cout << "Error on creating window, SDL Error : " << SDL_GetError() << endl;
+		}
+		else
+		{
+			//Create Renderer for window
+			renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-        if(window == nullptr)
-        {
-            cout << "Error on creating window, SDL Error : " << SDL_GetError() << endl;
-        }
+			if (renderer == nullptr)
+			{
+				cout << "Error on creating renderer, SDL Error : " << SDL_GetError() << endl;;
+			}
+			else
+			{
+				// Initialize  renderer color
+				SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
-        else
-        {
-            //  Get window surface
-            screen_surface = SDL_GetWindowSurface(window);
+				//  Initialize PNG loading
+				int img_flag = IMG_INIT_PNG;
 
-            //  Fill the sufrace white
-            SDL_FillRect(screen_surface, nullptr, SDL_MapRGB(screen_surface->format, 0xFF, 0xFF, 0xFF));
+				if (!(IMG_Init(img_flag) & img_flag))
+				{
+					cout << "Error on creating SDL image, SDL_image Error : " << IMG_GetError() << endl;
+				}
+			}
+		}
+	}
 
-            //  Updating surface
-            SDL_UpdateWindowSurface(window);
-        }			
-			
-    }
-
-	// Initialisation du renderer
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	SDL_SetRenderDrawColor(renderer, 100, 90, 200, 100);
 
 	background.load("background.png", renderer);
@@ -197,6 +204,10 @@ int main(int argc, char* args[])
 				{
 					mage.b.y -= 7;
 					isWalk = 0;
+					if (key[SDL_SCANCODE_LEFT])
+						isWalk = 1;
+					if (key[SDL_SCANCODE_RIGHT])
+						isWalk = 1;
 				}
 			}
 		}
@@ -212,6 +223,10 @@ int main(int argc, char* args[])
 				{
 					mage.b.y += 7;
 					isWalk = 0;
+					if(key[SDL_SCANCODE_LEFT])
+						isWalk = 1;
+					if(key[SDL_SCANCODE_RIGHT])
+						isWalk = 1;
 				}
 			}
 		}
