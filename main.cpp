@@ -12,7 +12,8 @@
 
 #include <iostream>   //  Standard IO librar
 #include "Texture.hpp" // Implantation texture
-#include "Collision.hpp"
+#include "Collision.hpp" // Implantation collision
+#include "Pnj.hpp" // Implantation Pnj
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
@@ -56,7 +57,7 @@ int main(int argc, char* args[])
 	SDL_Renderer* renderer;
 
 	// Collision
-	Collision joueur, limitCollision[4];
+	Collision joueur, limitCollision[4], pnjCollision;
 
 	// Rect
 	SDL_Rect limit[4];
@@ -67,6 +68,9 @@ int main(int argc, char* args[])
 	const int delayMax = 1;
 	int delay = 0;
 	bool isWalk = 0;
+
+	// PNJ
+	Pnj *test = NULL;
 
 	// Init Everything
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
@@ -109,12 +113,17 @@ int main(int argc, char* args[])
 
 	SDL_SetRenderDrawColor(renderer, 100, 90, 200, 100);
 
+	// Chargament des textures
 	background.load("background.png", renderer);
 	background.draw(0, 0, 1280, 720, renderer);
 
 	mage.load("mageWalk.png", renderer);
 	mage.draw(0, 128, 350, 500, 63, 63, renderer);
 	joueur.collisionInit(&mage.b);
+
+	test = new Pnj("Jean", "pnjWalk.png", renderer);
+	test->sprite.draw(0, 128, 1280 / 2, 720 / 2, 63, 63, renderer);
+	pnjCollision.collisionInit(&test->sprite.b);
 
 	// Init des limites
 	// Gauche
@@ -168,7 +177,7 @@ int main(int argc, char* args[])
 
 			for (int i = 0; i < 4; i++)
 			{
-				if (joueur.collisionTest(limitCollision[i]))
+				if (joueur.collisionTest(limitCollision[i]) || joueur.collisionTest(pnjCollision))
 				{
 					mage.b.x -= 7;
 					isWalk = 0;
@@ -184,7 +193,7 @@ int main(int argc, char* args[])
 
 			for (int i = 0; i < 4; i++)
 			{
-				if (joueur.collisionTest(limitCollision[i]))
+				if (joueur.collisionTest(limitCollision[i]) || joueur.collisionTest(pnjCollision))
 				{
 					mage.b.x += 7;
 					isWalk = 0;
@@ -200,7 +209,7 @@ int main(int argc, char* args[])
 
 			for (int i = 0; i < 4; i++)
 			{
-				if (joueur.collisionTest(limitCollision[i]))
+				if (joueur.collisionTest(limitCollision[i]) || joueur.collisionTest(pnjCollision))
 				{
 					mage.b.y -= 7;
 					isWalk = 0;
@@ -219,7 +228,7 @@ int main(int argc, char* args[])
 
 			for (int i = 0; i < 4; i++)
 			{
-				if (joueur.collisionTest(limitCollision[i]))
+				if (joueur.collisionTest(limitCollision[i])||joueur.collisionTest(pnjCollision))
 				{
 					mage.b.y += 7;
 					isWalk = 0;
@@ -254,6 +263,42 @@ int main(int argc, char* args[])
 
 		mage.update(renderer);
 		isWalk = 0;
+
+		// PNJ
+		test->Deplacement(renderer);
+		for (int i = 0; i < 4; i++)
+		{
+			if (pnjCollision.collisionTest(limitCollision[i])||pnjCollision.collisionTest(joueur))
+			{
+				if (test->rdmDirection == 0)
+				{
+					test->pnjIsWalk = 0;
+					test->sprite.b.y += 1;
+				}
+				if (test->rdmDirection == 1)
+				{
+					test->pnjIsWalk = 0;
+					test->sprite.b.y -= 1;
+				}
+				if (test->rdmDirection == 2)
+				{
+					test->pnjIsWalk = 0;
+					test->sprite.b.x += 1;
+				}
+				if (test->rdmDirection == 3)
+				{
+					test->pnjIsWalk = 0;
+					test->sprite.b.x -= 1;
+				}
+			}
+		}
+		SDL_RenderDrawRect(renderer, &mage.b);
+		SDL_RenderDrawRect(renderer, &test->sprite.b);
+
+		test->Animation(renderer);
+		test->sprite.update(renderer);
+
+
 
 		//Update screen
 		SDL_RenderPresent(renderer);
